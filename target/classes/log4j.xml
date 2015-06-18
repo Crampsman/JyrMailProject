@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+
+	<appender name="DB" class="org.apache.log4j.jdbc.JDBCAppender">
+		<param name="URL" value="jdbc:mysql://localhost:3306/jyr" />
+		<param name="driver" value="com.mysql.jdbc.Driver" />
+		<param name="user" value="root" />
+		<param name="password" value="123456" />
+		<param name="threshold" value="ERROR" />
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="INSERT INTO Logs VALUES('%x','%d','%C','%p','%m')" />
+		</layout>
+	</appender>
+
+	<appender name="FILE" class="org.apache.log4j.FileAppender">
+		<param name="file" value="C:/Users/OleksiiG/Documents/log_file.txt" />
+		<param name="immediateFlush" value="true" />
+		<param name="threshold" value="INFO" />
+		<param name="append" value="false" />
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="conversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+		</layout>
+	</appender>
+
+	<root>
+		<appender-ref ref="DB" />
+		<appender-ref ref="FILE" />
+	</root>
+
+</log4j:configuration>
