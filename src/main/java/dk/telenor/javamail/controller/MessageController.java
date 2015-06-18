@@ -62,9 +62,9 @@ public class MessageController {
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     public String getMessages(Map<String, Object> model) throws Exception {
 
-	UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-	model.put("messages", messageService.getMessages(1, user.getUsername()));
+	model.put("messages", messageService.getMessages(1, userDetails.getUsername()));
 	model.put("folders", folderService.getFolders());
 
 	return "account";
@@ -85,14 +85,14 @@ public class MessageController {
     @RequestMapping(value = { "/edit", "/redirect/{message_id}" }, method = RequestMethod.POST)
     public String sendMessage(@ModelAttribute("message") TextMessageDTO textMessage) throws Exception {
 
-	UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-	String email = user.getUsername();
+	String email = userDetails.getUsername();
 
 	textMessage.setMailFrom(email);
 	textMessage.setDirectoryId(folderService.getFolderIdByName("SENT"));
 	textMessage.setUserId(userServiceImpl.getUserIdByEmail(email));
-	String password = user.getPassword();
+	String password = userDetails.getPassword();
 	messageService.sendMessage(textMessage, AesScramblerPassword.decryptPassword(password));
 
 	return "redirect:/message/account";
@@ -111,9 +111,9 @@ public class MessageController {
     @RequestMapping(value = "/folder/{folderId}", method = RequestMethod.GET)
     public String getMessages(Map<String, Object> model, @PathVariable("folderId") long id) throws Exception {
 
-	UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-	model.put("messages", messageService.getMessages(id, user.getUsername()));
+	model.put("messages", messageService.getMessages(id, userDetails.getUsername()));
 	model.put("folders", folderService.getFolders());
 
 	return "account";
