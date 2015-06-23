@@ -117,9 +117,19 @@ public class MessageServiceImpl implements MessageService {
 		messageDao.transferMessageToFolder(messageId, folderId);
 	}
 
-	public List<TextMessageDTO> getMessages(long folderId, String email) {
+	public List<TextMessageDTO> getMessages(long folderId, String email, int offset, int noOffRecords) {
 
-		return messageDao.getMessagesByFolderId(folderId, email);
+		return messageDao.getMessagesByFolderId(folderId, email, offset, noOffRecords);
+	}
+
+	public String getRandomSpittles() {
+	    
+	    return messageDao.getRandomSpittles();
+	}
+	
+	public int getNoOfRecords() {
+	    
+	   return messageDao.getNoOfRecords();
 	}
 
 }

@@ -24,5 +24,10 @@ public class FolderServiceImpl implements FolderService {
 		
 		return folderDao.getFolderIdByName(name);
 	}
+	
+	public FolderDTO getFolderById(long id){
+	    
+	    return folderDao.getFolderById(id);
+	}
 
 }

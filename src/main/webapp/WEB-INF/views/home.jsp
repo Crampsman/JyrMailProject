@@ -34,15 +34,33 @@ label.error {
 }
 
 body {
-background: rgb(245,246,246); /* Old browsers */
-background: -moz-linear-gradient(45deg,  rgba(245,246,246,1) 0%, rgba(219,220,226,1) 21%, rgba(184,186,198,1) 49%, rgba(221,223,227,1) 80%, rgba(245,246,246,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgba(245,246,246,1)), color-stop(21%,rgba(219,220,226,1)), color-stop(49%,rgba(184,186,198,1)), color-stop(80%,rgba(221,223,227,1)), color-stop(100%,rgba(245,246,246,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(45deg,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(45deg,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(45deg,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* IE10+ */
-background: linear-gradient(45deg,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f6f6', endColorstr='#f5f6f6',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-margin-bottom: 60px;
+	background: rgb(245, 246, 246); /* Old browsers */
+	background: -moz-linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(245
+		, 246, 246, 1)), color-stop(21%, rgba(219, 220, 226, 1)),
+		color-stop(49%, rgba(184, 186, 198, 1)),
+		color-stop(80%, rgba(221, 223, 227, 1)),
+		color-stop(100%, rgba(245, 246, 246, 1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%); /* IE10+ */
+	background: linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f6f6',
+		endColorstr='#f5f6f6', GradientType=1);
+	/* IE6-9 fallback on horizontal gradient */
+	margin-bottom: 60px;
 }
 
 html {
@@ -51,15 +69,23 @@ html {
 }
 
 .footer {
-	background: rgb(255,255,255); /* Old browsers */
-background: -moz-linear-gradient(45deg,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(45deg,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(45deg,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(45deg,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
-background: linear-gradient(45deg,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
+	background: rgb(255, 255, 255); /* Old browsers */
+	background: -moz-linear-gradient(45deg, rgba(255, 255, 255, 1) 0%,
+		rgba(229, 229, 229, 1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(255
+		, 255, 255, 1)), color-stop(100%, rgba(229, 229, 229, 1)));
+	/* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 1) 0%,
+		rgba(229, 229, 229, 1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(45deg, rgba(255, 255, 255, 1) 0%,
+		rgba(229, 229, 229, 1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(45deg, rgba(255, 255, 255, 1) 0%,
+		rgba(229, 229, 229, 1) 100%); /* IE10+ */
+	background: linear-gradient(45deg, rgba(255, 255, 255, 1) 0%,
+		rgba(229, 229, 229, 1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff',
+		endColorstr='#e5e5e5', GradientType=1);
+	/* IE6-9 fallback on horizontal gradient */
 }
 
 .block-button {
@@ -77,18 +103,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 				<img src="${pageContext.request.contextPath}/resources/img/logo.png" class="img-responsive" alt="logo">
 			</div>
 			<div class="col-md-7">
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tellus libero, accumsan non justo ornare, dictum viverra mauris. Sed leo ligula, auctor id diam
-					ut, aliquam semper purus. Ut non nulla vitae nunc porttitor bibendum. Quisque non elementum ipsum. Morbi mollis, lectus et faucibus posuere, enim lacus dignissim
-					leo, at iaculis diam leo ut mi. Ut mollis justo congue tellus volutpat luctus. Pellentesque ac ipsum ac dui hendrerit congue et eu elit. Sed porta porttitor luctus.
-					Duis et turpis nec leo commodo volutpat. Curabitur vestibulum sollicitudin arcu et faucibus. Aenean ornare justo quis felis convallis vehicula. Suspendisse vel orci
-					feugiat lorem volutpat convallis. Etiam egestas vestibulum sem. Nullam pellentesque augue in ipsum finibus volutpat. Phasellus facilisis turpis eu orci laoreet,
-					vitae rhoncus augue facilisis. Suspendisse potenti. Donec id fringilla nisl. Maecenas non nisi auctor, fermentum diam at, congue lacus. Fusce at felis malesuada,
-					pretium nunc sit amet, vestibulum nulla. Fusce non faucibus ligula, sit amet maximus leo. Donec eget imperdiet nisi, eget rutrum enim. Fusce dapibus, urna quis
-					aliquam vulputate, nulla nibh dapibus tellus, quis dictum purus augue quis est. Etiam et enim tincidunt, consequat augue et, dignissim tellus. Fusce facilisis nunc
-					mi, in tincidunt dolor accumsan ac.</p>
+				<br /> <br />
+				<h4 align="left">
+					<i><c:out value="${spittle}" /></i>
+				</h4>
 			</div>
 		</div>
-
+		<br />
 		<sec:authorize access="!isAuthenticated()">
 
 			<div class="block-button" align="center">
@@ -145,7 +166,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 			<div class="block-button">
-				<a class="btn btn-primary btn-lg btn-block" href="<c:url value="message/account"/>">My account</a> <a class="btn btn-info btn-lg btn-block"
+				<a class="btn btn-primary btn-lg btn-block" href="<c:url value="message/account"/>?folderId=1">My account</a> <a class="btn btn-info btn-lg btn-block"
 					href="<c:url value = "/logout"/>">Exit</a>
 			</div>
 		</sec:authorize>

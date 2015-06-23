@@ -10,7 +10,7 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 	<http access-denied-page="/error403.jsp" auto-config="true"
 		authentication-manager-ref="authManager" use-expressions="true">
 		<intercept-url pattern="/javamail" access="premitAll" />
-		<intercept-url pattern="/message/*" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/message/**" access="hasRole('ROLE_USER')" />
 		<intercept-url pattern="/message/edit/*" access="hasRole('ROLE_USER')" />
 		<form-login login-processing-url="/j_spring_security_check"
 			login-page="/login.jsp" default-target-url="/"

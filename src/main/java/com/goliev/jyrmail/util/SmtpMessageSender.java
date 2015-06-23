@@ -31,7 +31,7 @@ public class SmtpMessageSender {
 	public  MimeMessage createMimeMessage(Session session, String subject, String mailFrom, String mailTo) throws MessagingException {
 		
 		MimeMessage message = new MimeMessage(session);
-		message.addRecipient(Message.RecipientType.CC, new InternetAddress(mailFrom));
+		message.setFrom(new InternetAddress(mailFrom));
 		message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(mailTo));
 		message.setSubject(subject);
 		message.setContent(new MimeMultipart());
@@ -48,7 +48,7 @@ public class SmtpMessageSender {
 		return message;
 	}
 
-	public  void sendMimeMessage(MimeMessage message) throws MessagingException {
+	public void sendMimeMessage(MimeMessage message) throws MessagingException  {
 		Transport.send(message);
 	}
 

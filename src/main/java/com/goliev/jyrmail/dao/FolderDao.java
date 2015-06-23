@@ -10,6 +10,8 @@ public interface FolderDao {
 	
 	public  long getFolderIdByName(String name);
 	
+	public FolderDTO getFolderById(long id);
+	
 	public  List<FolderDTO>  getFolders();
 	
 	public void updateFolder(FolderDTO folder);

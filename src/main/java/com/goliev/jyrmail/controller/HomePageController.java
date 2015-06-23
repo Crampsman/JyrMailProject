@@ -17,9 +17,14 @@ import com.goliev.jyrmail.service.MessageService;
 
 @Controller
 public class HomePageController {
+    
+    @Autowired
+    MessageService messageService;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String getSignPage(){
-		return "home";
-	}
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String getHomePage(Map<String, Object> model) {
+	
+	model.put("spittle", messageService.getRandomSpittles());
+	return "home";
+    }
 }

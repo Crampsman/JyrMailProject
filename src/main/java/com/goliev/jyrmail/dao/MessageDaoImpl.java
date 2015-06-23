@@ -1,5 +1,6 @@
 package com.goliev.jyrmail.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,196 +24,263 @@ import com.goliev.jyrmail.dto.TextMessageDTO;
 @Component
 public class MessageDaoImpl implements MessageDao {
 
-	private static final Logger LOGGER = Logger.getLogger(MessageDaoImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(MessageDaoImpl.class);
 
-	private JdbcTemplate temp;
+    private JdbcTemplate temp;
 
-	@Autowired
-	public void setDataSource(BasicDataSource dataSource) {
-		this.temp = new JdbcTemplate(dataSource);
-	}
+    private int noOfRecords;
 
-	public void createMessage(TextMessageDTO message) {
+    private BasicDataSource ds;
 
-		LOGGER.info("Start method. Create mesage with parameters: "
-				+ "[ subject: " + message.getSubject() + " mail from: "
-				+ message.getMailFrom() + " mail to " + message.getMailTo()
-				+ " ]");
+    @Autowired
+    public void setDataSource(BasicDataSource dataSource) {
+	this.temp = new JdbcTemplate(dataSource);
+    }
 
-		String sql = "INSERT INTO Message (directory_id, user_id, subject, text, mail_from, mail_to, create_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    @Autowired
+    public void setDs(BasicDataSource dataSource) {
+	ds = dataSource;
+    }
 
-		Object[] params = new Object[] { message.getDirectoryId(),
-				message.getUserId(), message.getSubject(), message.getText(),
-				message.getMailFrom(), message.getMailTo(),
-				message.getCreateDate() };
+    public void createMessage(TextMessageDTO message) {
 
-		int affectedMessages = temp.update(sql, params);
+	LOGGER.info("Start method. Create mesage with parameters: " + "[ subject: " + message.getSubject() + " mail from: " + message.getMailFrom()
+		+ " mail to " + message.getMailTo() + " ]");
 
-		LOGGER.info("Message updated: " + (affectedMessages > 0 ? true : false)
-				+ "[ subject: " + message.getSubject() + " mail from: "
-				+ message.getMailFrom() + " mail to " + message.getMailTo()
-				+ " ] ");
+	String sql = "INSERT INTO Message (directory_id, user_id, subject, text, mail_from, mail_to, create_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-	}
+	Object[] params = new Object[] { message.getDirectoryId(), message.getUserId(), message.getSubject(), message.getText(),
+		message.getMailFrom(), message.getMailTo(), message.getCreateDate() };
 
-	public void insertMessages(final List<TextMessageDTO> listMessages) {
+	int affectedMessages = temp.update(sql, params);
 
-		LOGGER.info("Start method. Create  list mesage with size: "
-				+ listMessages.size());
+	LOGGER.info("Message updated: " + (affectedMessages > 0 ? true : false) + "[ subject: " + message.getSubject() + " mail from: "
+		+ message.getMailFrom() + " mail to " + message.getMailTo() + " ] ");
 
-		String sql = "INSERT INTO Message (directory_id, user_id, subject, text, mail_from, mail_to, create_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    }
 
-		int[] affectedMessages = temp.batchUpdate(sql,
-				new BatchPreparedStatementSetter() {
+    public void insertMessages(final List<TextMessageDTO> listMessages) {
 
-					public void setValues(PreparedStatement ps, int i)
-							throws SQLException {
+	LOGGER.info("Start method. Create  list mesage with size: " + listMessages.size());
 
-						TextMessageDTO message = listMessages.get(i);
+	String sql = "INSERT INTO Message (directory_id, user_id, subject, text, mail_from, mail_to, create_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-						ps.setLong(1, message.getDirectoryId());
-						ps.setLong(2, message.getUserId());
-						ps.setString(3, message.getSubject());
-						ps.setString(4, message.getText());
-						ps.setString(5, message.getMailFrom());
-						ps.setString(6, message.getMailTo());
-						ps.setTimestamp(7, message.getCreateDate());
-					}
+	int[] affectedMessages = temp.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
-					public int getBatchSize() {
+	    public void setValues(PreparedStatement ps, int i) throws SQLException {
 
-						return listMessages.size();
-					}
-				});
+		TextMessageDTO message = listMessages.get(i);
 
-		LOGGER.info("Messages list created: "
-				+ (affectedMessages.length > 0 ? true : false)
-				+ listMessages.size() + " was created");
+		ps.setLong(1, message.getDirectoryId());
+		ps.setLong(2, message.getUserId());
+		ps.setString(3, message.getSubject());
+		ps.setString(4, message.getText());
+		ps.setString(5, message.getMailFrom());
+		ps.setString(6, message.getMailTo());
+		ps.setTimestamp(7, message.getCreateDate());
+	    }
 
-	}
+	    public int getBatchSize() {
 
-	public TextMessageDTO getMessageById(long id) {
+		return listMessages.size();
+	    }
+	});
 
-		LOGGER.info("Start method. Getting message by id: " + id);
+	LOGGER.info("Messages list created: " + (affectedMessages.length > 0 ? true : false) + listMessages.size() + " was created");
 
-		String sql = "SELECT message_id, directory_id, subject, text, mail_to, mail_from, create_date FROM Message WHERE message_id = ?";
+    }
 
-		TextMessageDTO textMessage = temp.queryForObject(sql,
-				new Object[] { id },
+    public TextMessageDTO getMessageById(long id) {
 
-				new RowMapper<TextMessageDTO>() {
+	LOGGER.info("Start method. Getting message by id: " + id);
 
-					public TextMessageDTO mapRow(ResultSet rs, int rowNum)
-							throws SQLException {
-						TextMessageDTO mess = new TextMessageDTO();
-						mess.setDirectoryId(rs.getLong("directory_id"));
-						mess.setMessageId(rs.getLong("message_id"));
-						mess.setMailTo(rs.getString("mail_to"));
-						mess.setMailFrom(rs.getString("mail_from"));
-						mess.setCreateDate(rs.getTimestamp("create_date"));
-						mess.setSubject(rs.getString("subject"));
-						mess.setText(rs.getString("text"));
+	String sql = "SELECT message_id, directory_id, subject, text, mail_to, mail_from, create_date FROM Message WHERE message_id = ?";
 
-						return mess;
-					}
+	TextMessageDTO textMessage = temp.queryForObject(sql, new Object[] { id }, new RowMapper<TextMessageDTO>() {
 
-				});
+	    public TextMessageDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+		TextMessageDTO message = new TextMessageDTO();
+		message.setDirectoryId(rs.getLong("directory_id"));
+		message.setMessageId(rs.getLong("message_id"));
+		message.setMailTo(rs.getString("mail_to"));
+		message.setMailFrom(rs.getString("mail_from"));
+		message.setCreateDate(rs.getTimestamp("create_date"));
+		message.setSubject(rs.getString("subject"));
+		message.setText(rs.getString("text"));
 
-		LOGGER.info("Retrieved message with id: " + id);
+		return message;
+	    }
 
-		return textMessage;
-	}
+	});
 
-	public List<TextMessageDTO> getMessagesByFolderId(long id, String email) {
+	LOGGER.info("Retrieved message with id: " + id);
 
-		LOGGER.info("Start method. Getting messages by folder id: " + id);
+	return textMessage;
+    }
 
-		String sql = "SELECT directory_id, mes.user_id, message_id, subject, text, mail_from, mail_to, create_date FROM Message AS mes, User AS us WHERE e_mail = ? AND mes.user_id = us.user_id AND directory_id = ? ORDER BY create_date DESC";
+    public List<TextMessageDTO> getMessagesByFolderId(long id, String email, int offset, int noOffRecords) {
 
-		List<TextMessageDTO> messList = new ArrayList<TextMessageDTO>();
+	/*
+	 * LOGGER.info("Start method. Getting messages by folder id: " + id);
+	 * 
+	 * String sql =
+	 * "SELECT directory_id, mes.user_id, message_id, subject, text, mail_from, mail_to, create_date FROM Message AS mes, User AS us WHERE e_mail = ? AND mes.user_id = us.user_id AND directory_id = ? ORDER BY create_date DESC LIMIT ?,?"
+	 * ;
+	 * 
+	 * List<TextMessageDTO> messList = new ArrayList<TextMessageDTO>();
+	 * 
+	 * List<Map<String, Object>> messageRows = temp.queryForList(sql, new
+	 * Object[] { email, id, offset, noOffRecords });
+	 * 
+	 * for (Map<String, Object> mesRow : messageRows) {
+	 * 
+	 * TextMessageDTO message = new TextMessageDTO();
+	 * 
+	 * message.setDirectoryId(Long.parseLong(String.valueOf(mesRow
+	 * .get("directory_id"))));
+	 * message.setUserId(Long.parseLong(String.valueOf(mesRow
+	 * .get("user_id"))));
+	 * message.setMessageId(Long.parseLong(String.valueOf(mesRow
+	 * .get("message_id"))));
+	 * message.setMailFrom(String.valueOf(mesRow.get("mail_from")));
+	 * message.setMailTo(String.valueOf(mesRow.get("mail_to")));
+	 * message.setSubject(String.valueOf(mesRow.get("subject")));
+	 * message.setText(String.valueOf(mesRow.get("text")));
+	 * message.setCreateDate((Timestamp) mesRow.get("create_date"));
+	 * 
+	 * messList.add(message); }
+	 * 
+	 * this.noOfRecords = temp.queryForInt("SELECT FOUND_ROWS()");
+	 * 
+	 * LOGGER.info("Messages retrieved: size " + messList.size() +
+	 * " folder id " + id);
+	 * 
+	 * return messList;
+	 * 
+	 * }
+	 */
 
-		List<Map<String, Object>> messageRows = temp.queryForList(sql,
-				new Object[] { email, id });
+	Connection con = null;
+	List<TextMessageDTO> messages = new ArrayList<TextMessageDTO>();
+	try {
 
-		for (Map<String, Object> mesRow : messageRows) {
+	    con = ds.getConnection();
 
-			TextMessageDTO message = new TextMessageDTO();
+	    String sql = "SELECT directory_id, mes.user_id, message_id, subject, text, mail_from, mail_to, create_date FROM Message AS mes, User AS us WHERE e_mail = ? AND mes.user_id = us.user_id AND directory_id = ? ORDER BY create_date DESC LIMIT ?,?";
 
-			message.setDirectoryId(Long.parseLong(String.valueOf(mesRow
-					.get("directory_id"))));
-			message.setUserId(Long.parseLong(String.valueOf(mesRow
-					.get("user_id"))));
-			message.setMessageId(Long.parseLong(String.valueOf(mesRow
-					.get("message_id"))));
-			message.setMailFrom(String.valueOf(mesRow.get("mail_from")));
-			message.setMailTo(String.valueOf(mesRow.get("mail_to")));
-			message.setSubject(String.valueOf(mesRow.get("subject")));
-			message.setText(String.valueOf(mesRow.get("text")));
-			message.setCreateDate((Timestamp) mesRow.get("create_date"));
+	    PreparedStatement stat = con.prepareStatement(sql);
 
-			messList.add(message);
+	    stat.setString(1, email);
+	    stat.setLong(2, id);
+	    stat.setInt(3, offset);
+	    stat.setInt(4, noOffRecords);
+
+	    ResultSet rs = stat.executeQuery();
+
+	    while (rs.next()) {
+
+		TextMessageDTO message = new TextMessageDTO();
+
+		message.setMessageId(rs.getLong("message_id"));
+		message.setCreateDate(rs.getTimestamp("create_date"));
+		message.setDirectoryId(rs.getLong("directory_id"));
+		message.setMailFrom(rs.getString("mail_from"));
+		message.setMailTo(rs.getString("mail_to"));
+		message.setSubject(rs.getString("subject"));
+		message.setText(rs.getString("text"));
+		message.setUserId(rs.getLong("user_id"));
+		messages.add(message);
+	    }
+
+	    rs.close();
+
+	    rs = stat.executeQuery("SELECT FOUND_ROWS()");
+
+	    if (rs.next()) {
+		this.noOfRecords = rs.getInt(1);
+	    }
+
+	} catch (SQLException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} finally {
+	    if (con != null) {
+		try {
+		    con.close();
+		} catch (SQLException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
 		}
-
-		LOGGER.info("Messages retrieved: size " + messList.size()
-				+ " folder id " + id);
-
-		return messList;
+	    }
 	}
 
-	public void updateMessage(TextMessageDTO message) {
+	return messages;
 
-		LOGGER.info("Start method. Update mesage with parameters: "
-				+ "[ subject: " + message.getSubject() + " mail from: "
-				+ message.getMailFrom() + " mail to " + message.getMailTo()
-				+ " ]");
+    }
 
-		String sql = "UPDATE Message SET directory_id = ?, subject = ?, text = ?, mail_to = ? WHERE message_id = ?";
+    public void updateMessage(TextMessageDTO message) {
 
-		Object[] params = new Object[] { message.getDirectoryId(),
-				message.getSubject(), message.getText(), message.getMailTo(),
-				message.getMessageId() };
+	LOGGER.info("Start method. Update mesage with parameters: " + "[ subject: " + message.getSubject() + " mail from: " + message.getMailFrom()
+		+ " mail to " + message.getMailTo() + " ]");
 
-		int affectedMessages = temp.update(sql, params);
+	String sql = "UPDATE Message SET directory_id = ?, subject = ?, text = ?, mail_to = ? WHERE message_id = ?";
 
-		LOGGER.info("Message updated: " + (affectedMessages > 0 ? true : false)
-				+ "[ subject: " + message.getSubject() + " mail from: "
-				+ message.getMailFrom() + " mail to " + message.getMailTo()
-				+ " ] was updated");
+	Object[] params = new Object[] { message.getDirectoryId(), message.getSubject(), message.getText(), message.getMailTo(),
+		message.getMessageId() };
 
+	int affectedMessages = temp.update(sql, params);
+
+	LOGGER.info("Message updated: " + (affectedMessages > 0 ? true : false) + "[ subject: " + message.getSubject() + " mail from: "
+		+ message.getMailFrom() + " mail to " + message.getMailTo() + " ] was updated");
+
+    }
+
+    public void transferMessageToFolder(long messageId, int folderId) {
+
+	LOGGER.info("Start method. Move mesage by id: " + messageId + " to directory " + " folderId");
+
+	String sql = "UPDATE Message SET directory_id = ? WHERE message_id = ?";
+
+	Object[] params = new Object[] { folderId, messageId };
+
+	long affectedMessages = temp.update(sql, params);
+
+	LOGGER.info("Message has been move: " + (affectedMessages > 0 ? true : false) + "id: " + messageId);
+
+    }
+
+    public long getMaxDate(String email) {
+
+	LOGGER.info("Start method. Getting max date for all user messages by email: " + email);
+
+	String sql = "SELECT MAX(create_date) FROM Message AS mes, Folder, User AS us WHERE mes.user_id = us.user_id AND e_mail = ?";
+
+	Timestamp result = temp.queryForObject(sql, new Object[] { email }, Timestamp.class);
+
+	if (result == null) {
+	    LOGGER.info("No messages for user with email: " + email);
+	    return -1;
 	}
 
-	public void transferMessageToFolder(long messageId, int folderId) {
+	LOGGER.info("Return max date for user messages with email: " + email);
 
-		LOGGER.info("Start method. Move mesage by id: " + messageId + " to directory " + " folderId");
+	return result.getTime();
+    }
 
-		String sql = "UPDATE Message SET directory_id = ? WHERE message_id = ?";
+    public String getRandomSpittles() {
 
-		Object[] params = new Object[] { folderId, messageId };
+	String countSql = "SELECT COUNT(*) FROM Spittles";
 
-		long affectedMessages = temp.update(sql, params);
+	String sql = "SELECT text FROM Spittles WHERE id = ?";
 
-		LOGGER.info("Message has been move: " + (affectedMessages > 0 ? true : false) + "id: " + messageId);
+	int count = (int) (Math.random() * (temp.queryForInt(countSql) - 1) + 1);
 
-	}
+	return temp.queryForObject(sql, new Object[] { count }, String.class);
 
-	public long getMaxDate(String email) {
+    }
 
-		LOGGER.info("Start method. Getting max date for all user messages by email: "
-				+ email);
-
-		String sql = "SELECT MAX(create_date) FROM Message AS mes, Folder, User AS us WHERE mes.user_id = us.user_id AND e_mail = ?";
-
-		Timestamp result = temp.queryForObject(sql, new Object[] { email },
-				Timestamp.class);
-
-		if (result == null) {
-			LOGGER.info("No messages for user with email: " + email);
-			return -1;
-		}
-
-		LOGGER.info("Return max date for user messages with email: " + email);
-
-		return result.getTime();
-	}
+    public int getNoOfRecords() {
+	return noOfRecords;
+    }
 
 }

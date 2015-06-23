@@ -28,7 +28,7 @@ public class ScheduledUpdateMessage {
 	@Autowired
 	private MessageService messageService;
 	
-	@Scheduled(fixedDelay = 600000)
+	@Scheduled(fixedDelay = 60000)
 	public void updateMessageInDataBase() throws Exception {
 
 		List<UserDTO> users = new ArrayList<UserDTO>();

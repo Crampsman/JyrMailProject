@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.goliev.jyrmail.dao.FolderDao;
 import com.goliev.jyrmail.dao.UserDao;
 import com.goliev.jyrmail.dto.TextMessageDTO;
 import com.goliev.jyrmail.dto.UserDTO;
@@ -57,14 +59,33 @@ public class MessageController {
      * 
      * return "redirect:/message/account"; }
      */
-    
+
     @RequestMapping(value = "/account", method = RequestMethod.GET)
-    public String getMessages(Map<String, Object> model) throws Exception {
+    public String getMessages(Map<String, Object> model, @RequestParam(value = "page", required = false) Integer numPage,
+	    @RequestParam(value = "folderId", required = false) Integer folderId) throws Exception {
 
 	UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-	model.put("messages", messageService.getMessages(1, userDetails.getUsername()));
+	int page = 1;
+	int recordsPerPage = 5;
+
+	if (numPage != null) {
+	    page = numPage;
+	}
+
+	if (folderId != null && folderId <= folderService.getFolders().size()) {
+	    model.put("messages", messageService.getMessages(folderId, userDetails.getUsername(), (page - 1) * recordsPerPage, recordsPerPage));
+	    model.put("currentFolder", folderService.getFolderById(folderId));
+	} else {
+	    model.put("messages", messageService.getMessages(1, userDetails.getUsername(), (page - 1) * recordsPerPage, recordsPerPage));
+	    model.put("currentFolder", folderService.getFolderById(1));
+	}
+	int noOfRecords = messageService.getNoOfRecords();
+	int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+
 	model.put("folders", folderService.getFolders());
+	model.put("noOfPages", noOfPages);
+	model.put("currentPage", page);
 
 	return "account";
 
@@ -112,7 +133,8 @@ public class MessageController {
 
 	UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-	model.put("messages", messageService.getMessages(id, userDetails.getUsername()));
+	// model.put("messages", messageService.getMessages(id,
+	// userDetails.getUsername()));
 	model.put("folders", folderService.getFolders());
 
 	return "account";

@@ -9,4 +9,6 @@ public interface FolderService {
 	public List<FolderDTO> getFolders();
 	
 	public long getFolderIdByName(String name);
+	
+	public FolderDTO getFolderById(long id);
 }

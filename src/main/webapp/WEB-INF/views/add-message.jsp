@@ -11,15 +11,33 @@
 <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 <style type="text/css">
 body {
-background: rgb(245,246,246); /* Old browsers */
-background: -moz-linear-gradient(45deg,  rgba(245,246,246,1) 0%, rgba(219,220,226,1) 21%, rgba(184,186,198,1) 49%, rgba(221,223,227,1) 80%, rgba(245,246,246,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgba(245,246,246,1)), color-stop(21%,rgba(219,220,226,1)), color-stop(49%,rgba(184,186,198,1)), color-stop(80%,rgba(221,223,227,1)), color-stop(100%,rgba(245,246,246,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(45deg,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(45deg,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(45deg,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* IE10+ */
-background: linear-gradient(45deg,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f6f6', endColorstr='#f5f6f6',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-margin-bottom: 60px;
+	background: rgb(245, 246, 246); /* Old browsers */
+	background: -moz-linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(245
+		, 246, 246, 1)), color-stop(21%, rgba(219, 220, 226, 1)),
+		color-stop(49%, rgba(184, 186, 198, 1)),
+		color-stop(80%, rgba(221, 223, 227, 1)),
+		color-stop(100%, rgba(245, 246, 246, 1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%); /* IE10+ */
+	background: linear-gradient(45deg, rgba(245, 246, 246, 1) 0%,
+		rgba(219, 220, 226, 1) 21%, rgba(184, 186, 198, 1) 49%,
+		rgba(221, 223, 227, 1) 80%, rgba(245, 246, 246, 1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f6f6',
+		endColorstr='#f5f6f6', GradientType=1);
+	/* IE6-9 fallback on horizontal gradient */
+	margin-bottom: 60px;
 }
 
 html {
@@ -32,7 +50,7 @@ html {
 <body>
 	<br />
 	<div class="container">
-		<sf:form id="registration-form" class="well form-horizontal" method="post" modelAttribute="message">
+		<sf:form id="registration-form" class="well form-horizontal" method="post" modelAttribute="message" onsubmit="return validateForm()">
 			<fieldset>
 				<legend align="bottom"> Create new message </legend>
 				<div class="form-group">
@@ -80,12 +98,14 @@ html {
 						</div>
 					</div>
 				</div>
-
 				<div class="form-actions">
 					<button type="submit" class="btn btn-warning">
 						Submit <span class="glyphicon glyphicon-send"></span>
 					</button>
 					<button type="reset" class="btn">Cancel</button>
+					<h5 align="right">
+						<a href='<c:url value="/"/>'>back home</a>
+					</h5>
 				</div>
 			</fieldset>
 		</sf:form>
@@ -101,6 +121,13 @@ html {
 		$(document).ready(function() {
 			$('pre').addClass('prettyprint linenums');
 		});
+		function validateForm() {
+			var x = document.forms["registration-form"]["mailTo"].value;
+			if (x == null || x == "") {
+				alert("Mail to must be filled out");
+				return false;
+			}
+		}
 	</script>
 </body>
 </html>
