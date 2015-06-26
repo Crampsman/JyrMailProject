@@ -19,10 +19,8 @@ import com.goliev.jyrmail.util.SmtpMessageSender;
 @Component
 public class SmtpMessageTransfer  {
 
-	private static final String SMTP_HOST = "smtp.gmail.com";
-	private static final String IMAP_HOST = "imap.gmail.com";
+	private static final String SMTP_HOST = "smtp.gmail.com";	
 	private static final int SMTP_PORT = 465;
-	private static final String STORE_TYPE = "imaps";
 	private static final String CHARSET = "utf-8";
 	private static final String TYPE = "plain";
 
@@ -43,9 +41,7 @@ public class SmtpMessageTransfer  {
 		messageSender.sendMimeMessage(message);
 	}
 
-	public Message[] getMessagesFromSmtp(String email, String password) throws MessagingException, IOException {
-
-		Store store = messageReader.createStore(IMAP_HOST, STORE_TYPE, email, password);
+	public Message[] getMessagesFromSmtp(String email, String password, Store store) throws MessagingException, IOException {
 
 		Folder folder = messageReader.getFolder("INBOX", store);
 		Message[] messages = messageReader.getMessage(folder);
