@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,48 +21,65 @@ import com.goliev.jyrmail.dao.RoleDao;
 import com.goliev.jyrmail.dao.UserDao;
 import com.goliev.jyrmail.dto.Role;
 import com.goliev.jyrmail.dto.UserDTO;
+import com.goliev.jyrmail.util.ImapMessageReader;
 
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
 
-	@Autowired
-	private UserDao userDao;
+    @Autowired
+    private UserDao userDao;
 
-	@Autowired
-	private RoleDao roleDao;
+    @Autowired
+    private RoleDao roleDao;
 
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String getEditPage(Map<String, Object> model) {
+    private static final String STORE_TYPE = "imaps";
 
-		model.put("user", new UserDTO());
+    private static final String IMAP_HOST = "imap.gmail.com";
 
-		return "add-user";
+    private ImapMessageReader messageReader = new ImapMessageReader();
 
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public String getEditPage(Map<String, Object> model) {
+
+	model.put("user", new UserDTO());
+
+	return "add-user";
+
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String addUser(Map<String, Object> model, @ModelAttribute("user") UserDTO user) {
+
+	boolean checkUser = true;
+
+	try {
+
+	    messageReader.createStore(IMAP_HOST, STORE_TYPE, user.getEmail(), user.getPassword());
+
+	} catch (MessagingException e) {
+
+	    checkUser = false;
 	}
 
-	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	public String addUser(Map<String, Object> model,
-			@ModelAttribute("user")  UserDTO user) throws Exception {
+	if (checkUser && userDao.createUser(user)) {
 
-		//if (bindingResult.hasErrors()) {
-			//return "add-user";
-		//}
+	    Role role = new Role();
+	    role.setRole("ROLE_USER");
+	    role.setUserId(userDao.getUserIdByEmail(user.getEmail()));
+	    roleDao.createRole(role);
 
-		Role role = new Role();
+	    return "redirect:/";
 
-		if (userDao.createUser(user)) {
+	} else {
 
-			role.setRole("ROLE_USER");
-			role.setUserId(userDao.getUserIdByEmail(user.getEmail()));
-			roleDao.createRole(role);
-
-			return "redirect:/";
-		}
-		else{
-			model.put("exists", "User already exists");
-			return "add-user";
-		}
-
+	    if (!checkUser) {
+		model.put("invalidUserMessage", "Your Gmail account does not exist or has blocked");
+	    } else {
+		model.put("invalidUserMessage", "Gmail account already exists");
+	    }
+	    return "add-user";
 	}
+
+    }
 }
