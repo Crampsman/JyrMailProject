@@ -7,7 +7,7 @@ import com.goliev.jyrmail.dto.UserDTO;
 
 public interface UserDao {
 	
-	public boolean createUser(UserDTO user) throws Exception;
+	public boolean createUser(UserDTO user);
 	
 	public UserDTO getUserById(long id);
 	
