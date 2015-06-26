@@ -39,7 +39,7 @@ public class UserDaoImpl implements UserDao {
 		this.temp = new JdbcTemplate(dataSource);
 	}
 
-    public boolean createUser(UserDTO user) throws Exception {
+    public boolean createUser(UserDTO user) {
 
 	LOGGER.info("Start method. Create user with email: " + user.getEmail());
 
@@ -47,8 +47,14 @@ public class UserDaoImpl implements UserDao {
 	String insertSql = "INSERT INTO User (user_name, e_mail, password) VALUES (?, ?, ?)";
 
 	Object[] existsParams = new Object[] { user.getEmail() };
-	Object[] insertParams = new Object[] { user.getName(), user.getEmail(),
-		AesScramblerPassword.encryptPassword(user.getPassword()) };
+	Object[] insertParams = null;
+	try {
+	    insertParams = new Object[] { user.getName(), user.getEmail(),
+	    	AesScramblerPassword.encryptPassword(user.getPassword()) };
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
 
 	if (temp.queryForInt(existsSql, existsParams) == 1) {
 	    LOGGER.info("User with email: " + user.getEmail()
