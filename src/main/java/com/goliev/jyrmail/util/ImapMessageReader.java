@@ -14,63 +14,51 @@ import javax.mail.Store;
 
 public class ImapMessageReader {
 
-	public  Store createStore(String host, String storeType, String user,
-			String password) {
+    public Store createStore(String host, String storeType, String user, String password) throws MessagingException {
 
-		Properties properties = new Properties();
+	Properties properties = new Properties();
 
-		properties.put("mail.imap.host", host);
-		properties.put("mail.imap.port", "993");
-		properties.put("mail.imap.starttls.enable", "true");
+	properties.put("mail.imap.host", host);
+	properties.put("mail.imap.port", "993");
+	properties.put("mail.imap.starttls.enable", "true");
 
-		Session emailSession = Session.getDefaultInstance(properties);
+	Session emailSession = Session.getDefaultInstance(properties);
 
-		Store store = null;
+	Store store = null;
 
-		try {
+	store = emailSession.getStore(storeType);
+	store.connect(host, user, password);
 
-			store = emailSession.getStore(storeType);
-			store.connect(host, user, password);
+	return store;
+    }
 
-		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    public Folder getFolder(String name, Store store) {
 
-		return store;
+	Folder emailFolder = null;
+
+	try {
+	    emailFolder = store.getFolder(name);
+	    emailFolder.open(Folder.READ_ONLY);
+	} catch (MessagingException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
 
-	public  Folder getFolder(String name, Store store) {
+	return emailFolder;
+    }
 
-		Folder emailFolder = null;
+    public Message[] getMessage(Folder folder) {
 
-		try {
-			emailFolder = store.getFolder(name);
-			emailFolder.open(Folder.READ_ONLY);
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	Message[] messages = null;
 
-		return emailFolder;
+	try {
+	    messages = folder.getMessages();
+	} catch (MessagingException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
 
-	public  Message[] getMessage(Folder folder) {
+	return messages;
+    }
 
-		Message[] messages = null;
-
-		try {
-			messages = folder.getMessages();
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return messages;
-	}
-
-	
 }
