@@ -251,18 +251,13 @@ public class MessageDaoImpl implements MessageDao {
 
     public long getMaxDate(String email) {
 
-	LOGGER.info("Start method. Getting max date for all user messages by email: " + email);
+	LOGGER.info("Start method [getMaxDate]. Getting max date in all retrive messages for user with email: " + email);
 
 	String sql = "SELECT MAX(create_date) FROM Message AS mes, Folder, User AS us WHERE mes.user_id = us.user_id AND e_mail = ?";
 
 	Timestamp result = temp.queryForObject(sql, new Object[] { email }, Timestamp.class);
 
-	if (result == null) {
-	    LOGGER.info("No messages for user with email: " + email);
-	    return -1;
-	}
-
-	LOGGER.info("Return max date for user messages with email: " + email);
+	LOGGER.info("Max created date in all messages for user with email " + email + " is " + result);
 
 	return result.getTime();
     }
